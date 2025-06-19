@@ -16,5 +16,13 @@
   "bugs": {
     "url": "https://github.com/mpermperpisang/mper-wdio-demo/issues"
   },
-  "homepage": "https://github.com/mpermperpisang/mper-wdio-demo#readme"
+  "homepage": "https://github.com/mpermperpisang/mper-wdio-demo#readme",
+  "devDependencies": {
+    "@wdio/cli": "^9.15.0",
+    "@wdio/local-runner": "^9.15.0",
+    "@wdio/mocha-framework": "^9.15.0",
+    "chai": "^5.2.0",
+    "wdio-chromedriver-service": "^8.1.1",
+    "webdriverio": "^9.15.0"
+  }
 }
