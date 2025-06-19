@@ -1,0 +1,3 @@
+{
+  "text": "/var/folders/0w/950h0p_x37s6gjggssh5tgwr0000gn/T/.org.chromium.Chromium.jD7QbX/uploadiA5sWv/test-image.jpg"
+}
