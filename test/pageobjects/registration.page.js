@@ -2,6 +2,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 import Page from './page.js';
+import { withDynamicElements } from '../helpers/propertyLoader.js';
 import { getTodayDateNumber, getTodayDateFormattedMMDDYYYY } from '../helpers/dateHelper.js';
 
 // ES Module fix for __dirname
@@ -9,16 +10,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 class RegistrationPage extends Page {
-    get nameInput() { return $('#name'); }
-    get genderFemale() { return $('#female'); }
-    get countrySelect() { return $('#country'); }
-    get dateInput() { return $('#datepicker'); }
-    getCalendarDateElement(day) {
-        return $(`//a[normalize-space(text())='${day}']`);
+    constructor() {
+        super();
+        return withDynamicElements(this);
     }
-    get photoUploadInput() { return $('#singleFileInput'); }
-    get uploadSingleFileButton() { return $('//*[text()="Upload Single File"]'); }
-    get fileUploadMessage() { return $('#singleFileStatus') }
 
     async open() {
         await super.open(); // goes to full site URL
@@ -29,18 +24,18 @@ class RegistrationPage extends Page {
     }
 
     async fillForm() {
-        await this.nameInput.waitForDisplayed({ timeout: 5000 });
-        await this.nameInput.setValue('Jane Doe');
-        await this.genderFemale.click();
-        await this.countrySelect.selectByVisibleText('India');
+        await this.NAME_INPUT.waitForDisplayed({ timeout: 5000 });
+        await this.NAME_INPUT.setValue('Jane Doe');
+        await this.GENDER_FEMALE.click();
+        await this.COUNTRY_SELECT.selectByVisibleText('India');
     }
 
     async selectDate() {
-        await this.dateInput.waitForClickable({ timeout: 5000 });
-        await this.dateInput.click();
+        await this.DATE_INPUT.waitForClickable({ timeout: 5000 });
+        await this.DATE_INPUT.click();
 
         const today = getTodayDateNumber();
-        const dateElement = this.getCalendarDateElement(today);
+        const dateElement = this.getLocator('CALENDAR_DATE_ELEMENT', today);;
 
         await dateElement.waitForClickable({ timeout: 5000 });
         await dateElement.click();
@@ -50,25 +45,25 @@ class RegistrationPage extends Page {
         const filePath = path.join(__dirname, '../files/test-image.png');
         const remotePath = await browser.uploadFile(filePath);
 
-        await this.photoUploadInput.waitForExist({ timeout: 5000 });
-        await this.photoUploadInput.scrollIntoView();
-        await this.photoUploadInput.setValue(remotePath);
+        await this.PHOTO_UPLOAD_INPUT.waitForExist({ timeout: 5000 });
+        await this.PHOTO_UPLOAD_INPUT.scrollIntoView();
+        await this.PHOTO_UPLOAD_INPUT.setValue(remotePath);
     }
 
     async clickUploadSingleFileButton() {
-        await this.uploadSingleFileButton.scrollIntoView();
-        await this.uploadSingleFileButton.click();
+        await this.UPLOAD_SINGLE_FILE_BUTTON.scrollIntoView();
+        await this.UPLOAD_SINGLE_FILE_BUTTON.click();
     }
 
     async validateSelectedDate() {
-        const value = await this.dateInput.getValue()
+        const value = await this.DATE_INPUT.getValue()
         const expected = getTodayDateFormattedMMDDYYYY();
 
         expect(value).toBe(expected);
     }
 
     async validateImageUploadedInfo() {
-        const message = await this.fileUploadMessage.getText();
+        const message = await this.FILE_UPLOAD_MESSAGE.getText();
         
         // TODO: Basic validation
         expect(message).toBe('Single file selected: test-image.png, Size: 88581 bytes, Type: image/png');
