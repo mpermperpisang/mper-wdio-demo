@@ -1,4 +1,4 @@
-# mper-wdio-mocha-demo
+# mper-wdio-mocha-web-demo
 
 ### Install
 - NodeJS v22.15.0

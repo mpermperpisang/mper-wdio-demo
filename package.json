@@ -1,5 +1,5 @@
 {
-  "name": "mper-wdio-demo",
+  "name": "mper-wdio-mocha-web-demo",
   "type": "module",
   "devDependencies": {
     "@wdio/allure-reporter": "^9.15.0",
