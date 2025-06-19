@@ -15,3 +15,6 @@ With Makefile
 Without Docker
 - `npx wdio run ./wdio.conf.js` or
 - `npm run test`
+
+Open Allure Reporter (without Docker)
+- `allure serve allure-results`
