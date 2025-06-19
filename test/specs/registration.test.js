@@ -1,3 +1,4 @@
+import { browser } from '@wdio/globals';
 import RegistrationPage from '../pageobjects/registration.page.js'
 
 describe('WEB Automation Testing - https://testautomationpractice.blogspot.com/', () => {
@@ -6,7 +7,8 @@ describe('WEB Automation Testing - https://testautomationpractice.blogspot.com/'
         await RegistrationPage.fillForm();
         await RegistrationPage.selectDate();
         await RegistrationPage.uploadPhoto();
-        await RegistrationPage.submit();
+        await RegistrationPage.clickUploadSingleFileButton();
+        await RegistrationPage.validateSelectedDate();
         await RegistrationPage.validateImageUploadedInfo();
     });
 });

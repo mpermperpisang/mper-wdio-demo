@@ -1,6 +1,8 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 import Page from './page.js';
+import { getTodayDateNumber, getTodayDateFormattedMMDDYYYY } from '../helpers/dateHelper.js';
 
 // ES Module fix for __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -11,9 +13,11 @@ class RegistrationPage extends Page {
     get genderFemale() { return $('#female'); }
     get countrySelect() { return $('#country'); }
     get dateInput() { return $('#datepicker'); }
-    get calendarDate15() { return $('//a[text()="15"]'); }
+    getCalendarDateElement(day) {
+        return $(`//a[normalize-space(text())='${day}']`);
+    }
     get photoUploadInput() { return $('#singleFileInput'); }
-    get submitButton() { return $('//*[text()="Upload Single File"]'); }
+    get uploadSingleFileButton() { return $('//*[text()="Upload Single File"]'); }
     get fileUploadMessage() { return $('#singleFileStatus') }
 
     async open() {
@@ -34,8 +38,12 @@ class RegistrationPage extends Page {
     async selectDate() {
         await this.dateInput.waitForClickable({ timeout: 5000 });
         await this.dateInput.click();
-        await this.calendarDate15.waitForClickable({ timeout: 5000 });
-        await this.calendarDate15.click();
+
+        const today = getTodayDateNumber();
+        const dateElement = this.getCalendarDateElement(today);
+
+        await dateElement.waitForClickable({ timeout: 5000 });
+        await dateElement.click();
     }
 
     async uploadPhoto() {
@@ -47,13 +55,21 @@ class RegistrationPage extends Page {
         await this.photoUploadInput.setValue(remotePath);
     }
 
-    async submit() {
-        await this.submitButton.scrollIntoView();
-        await this.submitButton.click();
+    async clickUploadSingleFileButton() {
+        await this.uploadSingleFileButton.scrollIntoView();
+        await this.uploadSingleFileButton.click();
+    }
+
+    async validateSelectedDate() {
+        const value = await this.dateInput.getValue()
+        const expected = getTodayDateFormattedMMDDYYYY();
+
+        expect(value).toBe(expected);
     }
 
     async validateImageUploadedInfo() {
         const message = await this.fileUploadMessage.getText();
+        
         // TODO: Basic validation
         expect(message).toBe('Single file selected: test-image.png, Size: 88581 bytes, Type: image/png');
     }
